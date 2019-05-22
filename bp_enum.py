@@ -2,10 +2,16 @@
 
 import random
 
-obj_cnt = 10
-bp_room = 100
-weight_list = [50, 4 ,10 ,34, 27, 33, 77, 43, 61, 48]
-value_list = [37, 14, 12, 20, 33, 27, 49, 52, 61, 50]
+with open('./input.txt', 'r') as fin:
+    obj_cnt = int(fin.readline())
+    bp_room = int(fin.readline())
+    weight_list = map(lambda x: int(x), fin.readline().split(" "))
+    value_list = map(lambda x: int(x), fin.readline().split(" "))
+
+# obj_cnt = 10
+# bp_room = 100
+# weight_list = [50, 4 ,10 ,34, 27, 33, 77, 43, 61, 48]
+# value_list = [37, 14, 12, 20, 33, 27, 49, 52, 61, 50]
 
 # Enum
 def bpEnum():
@@ -26,7 +32,7 @@ def bpEnum():
             bin_enum = i
     return max_num, bin(bin_enum)
 
-print("穷举法: " + str(bpEnum()[0]))
+# print("穷举法: " + str(bpEnum()[0]))
 
 
 
@@ -48,7 +54,7 @@ def bpFillSumList():
 
     return sum_list[obj_cnt-1][bp_room]
 
-print("动态规划: " + str(bpFillSumList()))
+# print("动态规划: " + str(bpFillSumList()))
 
 
 
@@ -65,7 +71,7 @@ def bpNoteBook(i, j):
     return max(bpNoteBook(i-1, j), bpNoteBook(i-1, j-weight_list[i])\
                + value_list[i])
 
-print("自顶向下的备忘录法: " + str(bpNoteBook(obj_cnt-1, bp_room)))
+# print("自顶向下的备忘录法: " + str(bpNoteBook(obj_cnt-1, bp_room)))
 
 
 
@@ -96,7 +102,7 @@ def bpBackTrace(depth, weight, value):
         bpBackTrace(depth + 1, new_w, value + value_list[depth])
 
 bpBackTrace(0, 0, 0)
-print("回溯法: " + str(max_value))
+# print("回溯法: " + str(max_value))
 
 
 
@@ -114,7 +120,7 @@ def bpBranchBound():
         if current[3] > weight_list[current[2]]:
             priority_queue.append((max_for_depth[current[2]+1] + value_list[current[2]] + current[1], value_list[current[2]] + current[1], current[2] + 1, current[3] - weight_list[current[2]]))
 
-print("分支限界法: " + str(bpBranchBound()))
+# print("分支限界法: " + str(bpBranchBound()))
 
 def bpMonteCarlo():
     max_num = 0
@@ -132,8 +138,15 @@ def bpMonteCarlo():
             max_num = v_sum
     return max_num
 
-print("蒙特卡洛法: " + str(bpMonteCarlo()))
+# print("蒙特卡洛法: " + str(bpMonteCarlo()))
 
+with open('./output.txt', 'w') as fout:
+    fout.write("穷举法: " + str(bpEnum()[0]) + '\n')
+    fout.write("动态规划: " + str(bpFillSumList()) + '\n')
+    fout.write("自顶向下的备忘录法: " + str(bpNoteBook(obj_cnt-1, bp_room)) + '\n')
+    fout.write("回溯法: " + str(max_value) + '\n')
+    fout.write("分支限界法: " + str(bpBranchBound()) + '\n')
+    fout.write("蒙特卡洛法: " + str(bpMonteCarlo()) + '\n')
 
 
 
